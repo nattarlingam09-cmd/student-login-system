@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduPortal — Student Registration</title>
+  <meta name="description" content="Register a new student account in EduPortal with modern security and real-time validation.">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Lucide Modern Icons via CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="app-container">
+    <div class="auth-wrapper">
+      
+      <!-- ==========================================
+           LEFT SECTION: BRANDING & BENEFITS
+           ========================================== -->
+      <aside class="auth-hero">
+        <!-- Brand Identity -->
+        <a href="index.html" class="brand-identity">
+          <div class="brand-icon">
+            <i data-lucide="graduation-cap"></i>
+          </div>
+          <div>
+            <div class="brand-name">EduPortal</div>
+          </div>
+          <span class="brand-badge">Enrollment</span>
+        </a>
+
+        <!-- Pitch -->
+        <div class="hero-content">
+          <div class="hero-tagline">
+            <i data-lucide="user-plus" style="width: 16px; height: 16px;"></i>
+            New Student Enrollment
+          </div>
+          <h1 class="hero-title">
+            Join the <span>EduPortal</span> Academic Network.
+          </h1>
+          <p class="hero-description">
+            Create your official student account to access your courses, grade logs, and authenticated digital student profile.
+          </p>
+        </div>
+
+        <!-- Security Features -->
+        <div class="hero-features">
+          <div class="feature-pill">
+            <div class="feature-icon-wrapper">
+              <i data-lucide="check-circle" style="width: 18px; height: 18px;"></i>
+            </div>
+            <div class="feature-text">
+              <h4>Verified Database Uniqueness</h4>
+              <p>Email addresses are strictly enforced as unique at both the Mongoose schema and database index levels.</p>
+            </div>
+          </div>
+
+          <div class="feature-pill">
+            <div class="feature-icon-wrapper">
+              <i data-lucide="shield-check" style="width: 18px; height: 18px;"></i>
+            </div>
+            <div class="feature-text">
+              <h4>Zero Plaintext Passwords</h4>
+              <p>Your password is cryptographically salted and hashed before reaching database persistence.</p>
+            </div>
+          </div>
+
+          <div class="feature-pill">
+            <div class="feature-icon-wrapper">
+              <i data-lucide="badge-check" style="width: 18px; height: 18px;"></i>
+            </div>
+            <div class="feature-text">
+              <h4>Instant Student Onboarding</h4>
+              <p>Once registered, your student profile is immediately active and ready for authentication.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="hero-footer">
+          <span>Student Login & Registration System</span>
+          <span>College Review Evaluation</span>
+        </div>
+      </aside>
+
+      <!-- ==========================================
+           RIGHT SECTION: REGISTRATION CARD
+           ========================================== -->
+      <main class="auth-panel">
+        <div class="auth-card" style="max-width: 500px;">
+          
+          <!-- Header -->
+          <div class="auth-header">
+            <h2>Create Account</h2>
+            <p>Enroll in EduPortal with your student credentials</p>
+          </div>
+
+          <!-- Dynamic Alert Banner -->
+          <div id="registerAlert" class="alert-banner" role="alert">
+            <div class="alert-icon">
+              <i id="registerAlertIcon" data-lucide="alert-circle" style="width: 18px; height: 18px;"></i>
+            </div>
+            <div id="registerAlertMessage" class="alert-content"></div>
+          </div>
+
+          <!-- Registration Form -->
+          <form id="registerForm" novalidate>
+            <!-- Full Name -->
+            <div class="form-group">
+              <label class="form-label" for="regName">Full Name</label>
+              <div class="input-wrapper">
+                <input 
+                  type="text" 
+                  id="regName" 
+                  name="name" 
+                  class="form-input" 
+                  placeholder="e.g. John Doe" 
+                  autocomplete="name"
+                  required
+                >
+                <span class="input-icon">
+                  <i data-lucide="user" style="width: 18px; height: 18px;"></i>
+                </span>
+              </div>
+              <div id="regNameError" class="field-error-msg">
+                <i data-lucide="alert-triangle" style="width: 14px; height: 14px;"></i>
+                <span>Please enter your full name (at least 2 characters).</span>
+              </div>
+            </div>
+
+            <!-- Student Email -->
+            <div class="form-group">
+              <label class="form-label" for="regEmail">College Email Address</label>
+              <div class="input-wrapper">
+                <input 
+                  type="email" 
+                  id="regEmail" 
+                  name="email" 
+                  class="form-input" 
+                  placeholder="student@college.edu" 
+                  autocomplete="email"
+                  required
+                >
+                <span class="input-icon">
+                  <i data-lucide="mail" style="width: 18px; height: 18px;"></i>
+                </span>
+              </div>
+              <div id="regEmailError" class="field-error-msg">
+                <i data-lucide="alert-triangle" style="width: 14px; height: 14px;"></i>
+                <span>Please enter a valid email address.</span>
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+              <label class="form-label" for="regPassword">Password</label>
+              <div class="input-wrapper">
+                <input 
+                  type="password" 
+                  id="regPassword" 
+                  name="password" 
+                  class="form-input has-toggle" 
+                  placeholder="Create a strong password"
+                  autocomplete="new-password"
+                  required
+                >
+                <span class="input-icon">
+                  <i data-lucide="lock" style="width: 18px; height: 18px;"></i>
+                </span>
+                <button 
+                  type="button" 
+                  id="toggleRegPassword" 
+                  class="toggle-password-btn" 
+                  aria-label="Toggle password visibility"
+                >
+                  <i data-lucide="eye" style="width: 18px; height: 18px;"></i>
+                </button>
+              </div>
+
+              <!-- Real-time Password Strength Meter -->
+              <div class="strength-meter-container">
+                <div class="strength-bar-track">
+                  <div class="strength-bar-segment" id="strengthSeg1"></div>
+                  <div class="strength-bar-segment" id="strengthSeg2"></div>
+                  <div class="strength-bar-segment" id="strengthSeg3"></div>
+                  <div class="strength-bar-segment" id="strengthSeg4"></div>
+                </div>
+                <div class="strength-label">
+                  <span>Password Strength</span>
+                  <span class="strength-score-text" id="strengthText">None</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="form-group">
+              <label class="form-label" for="regConfirmPassword">Confirm Password</label>
+              <div class="input-wrapper">
+                <input 
+                  type="password" 
+                  id="regConfirmPassword" 
+                  name="confirmPassword" 
+                  class="form-input has-toggle" 
+                  placeholder="Re-enter your password"
+                  autocomplete="new-password"
+                  required
+                >
+                <span class="input-icon">
+                  <i data-lucide="check-square" style="width: 18px; height: 18px;"></i>
+                </span>
+                <button 
+                  type="button" 
+                  id="toggleRegConfirmPassword" 
+                  class="toggle-password-btn" 
+                  aria-label="Toggle confirm password visibility"
+                >
+                  <i data-lucide="eye" style="width: 18px; height: 18px;"></i>
+                </button>
+              </div>
+              <div id="regConfirmPasswordError" class="field-error-msg">
+                <i data-lucide="alert-triangle" style="width: 14px; height: 14px;"></i>
+                <span>Passwords do not match.</span>
+              </div>
+            </div>
+
+            <!-- Interactive Requirements Checklist -->
+            <div class="requirements-checklist">
+              <div class="requirements-title">Password Security Requirements</div>
+              <div class="req-item" id="reqLength">
+                <div class="req-dot"><i data-lucide="check" style="width: 10px; height: 10px;"></i></div>
+                <span>Minimum 8 characters in length</span>
+              </div>
+              <div class="req-item" id="reqUpper">
+                <div class="req-dot"><i data-lucide="check" style="width: 10px; height: 10px;"></i></div>
+                <span>At least 1 uppercase letter (A-Z)</span>
+              </div>
+              <div class="req-item" id="reqSpecial">
+                <div class="req-dot"><i data-lucide="check" style="width: 10px; height: 10px;"></i></div>
+                <span>At least 1 number or special character (0-9, !@#$%^&*)</span>
+              </div>
+              <div class="req-item" id="reqMatch">
+                <div class="req-dot"><i data-lucide="check" style="width: 10px; height: 10px;"></i></div>
+                <span>Passwords match exactly</span>
+              </div>
+            </div>
+
+            <div style="margin-top: 1.25rem;"></div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="regSubmitBtn" class="btn-primary">
+              <span class="btn-text">Create Student Account</span>
+              <div class="spinner" id="regSpinner"></div>
+              <i data-lucide="user-check" class="btn-arrow" style="width: 18px; height: 18px;"></i>
+            </button>
+          </form>
+
+          <!-- Back to Login -->
+          <div class="auth-footer">
+            Already have an EduPortal account? 
+            <a href="index.html">Sign In Here</a>
+          </div>
+
+          <!-- Trust Stamp -->
+          <div class="security-stamp">
+            <i data-lucide="shield" style="width: 14px; height: 14px;"></i>
+            <span>Encrypted with 256-bit AES & bcrypt</span>
+          </div>
+
+        </div>
+      </main>
+
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="js/auth.js"></script>
+  <script>
+    if (window.lucide) {
+      lucide.createIcons();
+    }
+  </script>
+</body>
+</html>

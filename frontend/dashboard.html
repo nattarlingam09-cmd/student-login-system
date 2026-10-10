@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduPortal — Student Dashboard</title>
+  <meta name="description" content="Protected Student Dashboard powered by authenticated Node.js Express backend and MongoDB.">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Lucide Modern Icons via CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="dashboard-page">
+
+  <!-- ==========================================
+       DASHBOARD NAVIGATION BAR
+       ========================================== -->
+  <header class="dashboard-nav">
+    <div class="nav-container">
+      <!-- Brand Logo -->
+      <a href="dashboard.html" class="brand-identity">
+        <div class="brand-icon">
+          <i data-lucide="graduation-cap"></i>
+        </div>
+        <div>
+          <div class="brand-name">EduPortal</div>
+        </div>
+        <span class="brand-badge">Student Dashboard</span>
+      </a>
+
+      <!-- Right Nav Status & Actions -->
+      <div class="nav-actions">
+        <!-- Live Session Indicator -->
+        <div class="session-indicator" title="Your HttpOnly JWT session is active and verified">
+          <span class="pulsing-dot"></span>
+          <span>Verified Session</span>
+        </div>
+
+        <!-- Student Quick Profile Chip -->
+        <div style="display: flex; align-items: center; gap: 0.65rem;">
+          <div id="navAvatar" class="student-avatar" style="width: 36px; height: 36px; font-size: 0.95rem; border-radius: 50%;">
+            --
+          </div>
+          <span id="navStudentName" style="font-size: 0.875rem; font-weight: 600; color: #f8fafc; display: none;">Student</span>
+        </div>
+
+        <!-- Logout Button -->
+        <button id="logoutBtn" class="btn-logout" title="Log out and terminate session">
+          <i data-lucide="log-out" style="width: 16px; height: 16px;"></i>
+          <span>Sign Out</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================
+       MAIN DASHBOARD CONTENT
+       ========================================== -->
+  <main class="dashboard-content">
+    
+    <!-- Welcome Hero Section -->
+    <section class="welcome-hero">
+      <div class="welcome-text-group">
+        <div class="greeting-time" id="greetingTimeText">Academic Session 2026</div>
+        <h1 class="student-hero-name" id="heroWelcomeName">
+          Welcome, <span id="studentFirstNamePlaceholder" class="skeleton-shimmer" style="display: inline-block; width: 180px; height: 36px; vertical-align: middle;"></span>
+        </h1>
+        <p class="welcome-subtext">
+          You are authenticated into the EduPortal student environment. All profile data displayed below is fetched in real-time from your MongoDB database record via protected Express JWT routes.
+        </p>
+      </div>
+    </section>
+
+    <!-- Two-Column Grid: Profile & Security -->
+    <div class="dashboard-grid">
+      
+      <!-- Student Profile Card (From Database) -->
+      <div class="profile-card">
+        <div class="card-title-row">
+          <h3>
+            <i data-lucide="user-check" style="width: 20px; height: 20px; color: #818cf8;"></i>
+            Verified Student Profile
+          </h3>
+          <span id="studentStatusBadge" class="status-badge">
+            <i data-lucide="check" style="width: 12px; height: 12px;"></i>
+            <span id="studentStatusText">Active</span>
+          </span>
+        </div>
+
+        <div class="profile-identity-header">
+          <div id="profileAvatar" class="student-avatar">
+            --
+          </div>
+          <div class="student-identity-info">
+            <h4 id="profileName">Loading Profile...</h4>
+            <p id="profileEmail">Fetching student data...</p>
+          </div>
+        </div>
+
+        <div class="info-item-list">
+          <div class="info-row">
+            <span class="info-label">
+              <i data-lucide="hash" style="width: 15px; height: 15px;"></i>
+              Student ID
+            </span>
+            <span class="info-value" id="profileStudentId">EDUP-******</span>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label">
+              <i data-lucide="book-open" style="width: 15px; height: 15px;"></i>
+              Enrolled Department
+            </span>
+            <span class="info-value">Computer Science & Engineering</span>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label">
+              <i data-lucide="calendar" style="width: 15px; height: 15px;"></i>
+              Account Created On
+            </span>
+            <span class="info-value" id="profileCreatedAt">--</span>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label">
+              <i data-lucide="database" style="width: 15px; height: 15px;"></i>
+              Database Source
+            </span>
+            <span class="info-value" style="color: #34d399;">MongoDB Atlas Cluster</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Security & Auth Architecture Card -->
+      <div class="security-card">
+        <div class="card-title-row">
+          <h3>
+            <i data-lucide="shield-alert" style="width: 20px; height: 20px; color: #818cf8;"></i>
+            Security & Session Architecture
+          </h3>
+          <span class="status-badge" style="background: rgba(99, 102, 241, 0.15); border-color: rgba(99, 102, 241, 0.4); color: #c7d2fe;">
+            Verified by Backend
+          </span>
+        </div>
+
+        <div class="security-checklist">
+          <div class="security-check-item">
+            <i data-lucide="shield-check" class="badge-secure" style="width: 18px; height: 18px;"></i>
+            <div class="security-item-details">
+              <h5>HttpOnly Cookie Storage</h5>
+              <p>Authentication token is invisible to JavaScript <code style="color: #a5b4fc;">document.cookie</code>, preventing XSS-based session hijacking.</p>
+            </div>
+          </div>
+
+          <div class="security-check-item">
+            <i data-lucide="key" class="badge-secure" style="width: 18px; height: 18px;"></i>
+            <div class="security-item-details">
+              <h5>Cryptographic Password Hashing</h5>
+              <p>Stored passwords use bcrypt with cost factor 12. Password hashes are excluded from all API responses.</p>
+            </div>
+          </div>
+
+          <div class="security-check-item">
+            <i data-lucide="fingerprint" class="badge-secure" style="width: 18px; height: 18px;"></i>
+            <div class="security-item-details">
+              <h5>JWT Signature Verification</h5>
+              <p>Every protected request is cryptographically validated using HMAC SHA-256 against the server's secret key.</p>
+            </div>
+          </div>
+
+          <div class="security-check-item">
+            <i data-lucide="lock" class="badge-secure" style="width: 18px; height: 18px;"></i>
+            <div class="security-item-details">
+              <h5>SameSite CSRF Defense</h5>
+              <p>Cookie configured with SameSite lax/strict attributes to prevent Cross-Site Request Forgery vulnerabilities.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Quick Functional Portal Tools -->
+    <div style="margin-bottom: 1.25rem;">
+      <h3 style="font-size: 1.2rem; font-weight: 700; color: #ffffff; display: flex; align-items: center; gap: 0.5rem;">
+        <i data-lucide="layout-grid" style="width: 18px; height: 18px; color: #818cf8;"></i>
+        Portal Tools & Review Utilities
+      </h3>
+    </div>
+
+    <div class="quick-tools-grid">
+      <!-- Tool 1: Live Health Check -->
+      <div class="tool-card" id="btnRunHealthCheck">
+        <div class="tool-icon-box">
+          <i data-lucide="activity" style="width: 22px; height: 22px;"></i>
+        </div>
+        <h4>Live Server & DB Health</h4>
+        <p>Ping the Express <code style="color: #a5b4fc;">/api/health</code> endpoint to test round-trip latency and MongoDB connectivity in real time.</p>
+      </div>
+
+      <!-- Tool 2: Digital Student ID Card -->
+      <div class="tool-card" id="btnViewStudentCard">
+        <div class="tool-icon-box">
+          <i data-lucide="contact" style="width: 22px; height: 22px;"></i>
+        </div>
+        <h4>Digital Student ID Badge</h4>
+        <p>Generate an official printable digital identity card with your verified student name, ID number, and college details.</p>
+      </div>
+
+      <!-- Tool 3: Copy Student ID -->
+      <div class="tool-card" id="btnCopyStudentId">
+        <div class="tool-icon-box">
+          <i data-lucide="copy" style="width: 22px; height: 22px;"></i>
+        </div>
+        <h4>Copy Unique Student ID</h4>
+        <p>Copy your unique database-backed student ID string to the clipboard for official academic records.</p>
+      </div>
+    </div>
+
+    <!-- College Project Architecture & Viva Guide Panel -->
+    <div class="viva-architecture-panel">
+      <div class="card-title-row">
+        <h3>
+          <i data-lucide="code-2" style="width: 20px; height: 20px; color: #818cf8;"></i>
+          System Architecture — College Evaluation Overview
+        </h3>
+        <span class="status-badge" style="background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.4); color: #93c5fd;">
+          Viva Ready
+        </span>
+      </div>
+      <p style="font-size: 0.875rem; color: var(--text-muted); line-height: 1.6;">
+        This application implements a complete Full-Stack 3-Tier Architecture. Below is the technical breakdown ready to demonstrate during project reviews:
+      </p>
+
+      <div class="architecture-grid">
+        <div class="arch-node">
+          <div class="arch-node-badge">Presentation Layer</div>
+          <h5>Frontend Client</h5>
+          <p>Semantic HTML5, responsive CSS3 glassmorphism, Vanilla JS Fetch API with HttpOnly cookie credentials.</p>
+        </div>
+
+        <div class="arch-node">
+          <div class="arch-node-badge">Application Layer</div>
+          <h5>Express & Node.js</h5>
+          <p>RESTful API endpoints, centralized error handling, cookie-parser, and CORS policy middleware.</p>
+        </div>
+
+        <div class="arch-node">
+          <div class="arch-node-badge">Security Layer</div>
+          <h5>Auth & Cryptography</h5>
+          <p>bcrypt password salt rounds (12), JWT signing/verification, input sanitization, and timing attack mitigation.</p>
+        </div>
+
+        <div class="arch-node">
+          <div class="arch-node-badge">Data Layer</div>
+          <h5>MongoDB & Mongoose</h5>
+          <p>Schema validation, lowercase email normalization, unique compound index, and persistent cloud storage.</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==========================================
+       MODAL 1: SYSTEM HEALTH CHECK
+       ========================================== -->
+  <div id="healthModal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3>Live Backend Health Status</h3>
+        <button class="modal-close-btn" id="closeHealthModal">&times;</button>
+      </div>
+      <div id="healthModalContent" style="font-size: 0.875rem; color: var(--text-muted); line-height: 1.6;">
+        <div style="text-align: center; padding: 2rem;">
+          <div class="spinner" style="display: inline-block; width: 28px; height: 28px; border-width: 3px;"></div>
+          <p style="margin-top: 1rem; color: var(--text-muted);">Pinging <code style="color: #a5b4fc;">/api/health</code> endpoint...</p>
+        </div>
+      </div>
+      <div style="margin-top: 1.5rem; text-align: right;">
+        <button class="btn-primary" id="dismissHealthModal" style="height: 42px; display: inline-flex; width: auto; padding: 0 1.5rem;">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MODAL 2: DIGITAL STUDENT ID CARD
+       ========================================== -->
+  <div id="idCardModal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box" style="max-width: 480px; padding: 0; overflow: hidden; background: #0b0f19;">
+      <!-- ID Header -->
+      <div style="background: var(--gradient-brand); padding: 1.5rem; color: #ffffff; position: relative;">
+        <button class="modal-close-btn" id="closeIdModal" style="position: absolute; top: 1rem; right: 1rem; color: #ffffff;">&times;</button>
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center;">
+            <i data-lucide="graduation-cap" style="width: 20px; height: 20px;"></i>
+          </div>
+          <div>
+            <h4 style="font-size: 1.1rem; font-weight: 800; margin: 0;">EDUPORTAL ACADEMY</h4>
+            <span style="font-size: 0.725rem; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.05em;">Official Student Identity</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ID Body -->
+      <div style="padding: 1.75rem;">
+        <div style="display: flex; gap: 1.25rem; align-items: center; margin-bottom: 1.5rem;">
+          <div id="idCardAvatar" class="student-avatar" style="width: 76px; height: 76px; font-size: 1.75rem;">
+            --
+          </div>
+          <div>
+            <h3 id="idCardName" style="font-size: 1.2rem; font-weight: 700; color: #ffffff; margin-bottom: 0.25rem;">Student Name</h3>
+            <p id="idCardEmail" style="font-size: 0.825rem; color: #94a3b8; margin-bottom: 0.35rem;">email@college.edu</p>
+            <span class="status-badge">
+              <i data-lucide="badge-check" style="width: 12px; height: 12px;"></i>
+              Verified Student
+            </span>
+          </div>
+        </div>
+
+        <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-glass); border-radius: 0.75rem; padding: 1rem; font-size: 0.825rem; display: flex; flex-direction: column; gap: 0.5rem;">
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Student ID:</span>
+            <strong id="idCardStudentId" style="color: #ffffff;">EDUP-******</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Department:</span>
+            <strong style="color: #ffffff;">Computer Science & Eng.</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Issue Date:</span>
+            <strong id="idCardIssueDate" style="color: #ffffff;">--</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Auth Protocol:</span>
+            <strong style="color: #818cf8;">JWT / HttpOnly Cookie</strong>
+          </div>
+        </div>
+
+        <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 0.75rem;">
+          <button class="btn-primary" onclick="window.print()" style="height: 38px; width: auto; padding: 0 1.25rem; font-size: 0.85rem;">
+            <i data-lucide="printer" style="width: 15px; height: 15px;"></i>
+            Print ID Card
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- JavaScript -->
+  <script src="js/dashboard.js"></script>
+  <script>
+    if (window.lucide) {
+      lucide.createIcons();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "name": "student-login-system",
+  "version": "1.0.0",
+  "description": "Student Login & Registration System — College Project Portfolio",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node --watch backend/server.js",
+    "test": "node --test backend/tests/*.test.js",
+    "postinstall": "cd backend && npm install"
+  },
+  "keywords": [
+    "student-login",
+    "registration",
+    "jwt",
+    "mongodb",
+    "express",
+    "vanilla-js"
+  ],
+  "author": "Computer Science Engineering Student",
+  "license": "MIT"
+}
